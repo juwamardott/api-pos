@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Transaction;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Test User',
@@ -34,10 +36,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Laptop ASUS',
                 'sku' => 'SKU-001',
                 'description' => 'Laptop untuk kerja dan belajar',
-                'cost_price' => 5000000,
-                'margin' => 1000000,
-                'tax' => 50000,
-                'discount' => 0,
+                'price' => 5000000,
                 'stock' => 10,
                 'category_id' => 1,
                 'is_active' => true,
@@ -48,10 +47,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Kaos Polos',
                 'sku' => 'SKU-002',
                 'description' => 'Kaos bahan cotton',
-                'cost_price' => 50000,
-                'margin' => 25000,
-                'tax' => 5000,
-                'discount' => 2000,
+                'price' => 50000,
                 'stock' => 100,
                 'category_id' => 2,
                 'is_active' => true,
@@ -63,10 +59,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Celana Panjang',
                 'sku' => 'SKU-003',
                 'description' => 'Celana bahan cotton',
-                'cost_price' => 50000,
-                'margin' => 25000,
-                'tax' => 5000,
-                'discount' => 2000,
+                'price' => 50000,
                 'stock' => 100,
                 'category_id' => 2,
                 'is_active' => true,
@@ -74,5 +67,21 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]
         ]);
+
+         $users = User::take(10)->get();
+
+        if ($users->count() < 10) {
+            $this->command->warn('Minimal harus ada 10 user. Jalankan UserSeeder untuk menambahkan user.');
+            return;
+        }
+
+        foreach ($users as $index => $user) {
+            Transaction::create([
+                'customer_name' => "Customer " . ($index + 1),
+                'date_order' => Carbon::now()->subDays(rand(0, 30))->format('Y-m-d'),
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]);
+        }
     }
 }

@@ -2,38 +2,38 @@
 
 namespace App\Services;
 
-use App\Models\Product;
+use App\Models\Transaction;
 
 class ProductService
 {
     public function getAll()
     {
-        return Product::with('category')->get();
+        return Transaction::with('author', 'updater')->get();
     }
 
     public function getById($id)
         {
-            return Product::with('category')->findOrFail($id);
+            return Transaction::with('author', 'updater')->findOrFail($id);
         }
 
     public function create(array $data)
     {
-        return Product::create($data);
+        return Transaction::create($data);
     }
 
     public function update($id, array $data)
     {
         // Cari produk, kalau tidak ada otomatis akan throw ModelNotFoundException
-        $product = Product::findOrFail($id);
+        $product = Transaction::findOrFail($id);
 
         // Cek SKU unik, jika ada SKU yang sama di produk lain
-        if (isset($data['sku'])) {
-            $exists = Product::where('sku', $data['sku'])
+        if (isset($data['id'])) {
+            $exists = Transaction::where('id', $data['id'])
                             ->where('id', '!=', $id)
                             ->exists();
 
             if ($exists) {
-                abort(409, 'SKU sudah digunakan oleh produk lain.');
+                abort(409, 'Transactin sudah ada.');
             }
         }
 
@@ -45,7 +45,7 @@ class ProductService
 
     public function delete($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Transaction::findOrFail($id);
         $product->delete();
         return true;
     }
