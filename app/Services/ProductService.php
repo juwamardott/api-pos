@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductService
 {
@@ -44,8 +45,16 @@ class ProductService
 
     public function delete($id)
     {
-        $product = Product::findOrFail($id);
-        $product->delete();
-        return true;
+        $product = Product::find($id);
+
+        if (!$product) {
+            // Lempar exception jika produk tidak ditemukan
+            return 0;
+        }else{
+            
+            $product->delete();
+            return 1;
+        }
+
     }
 }

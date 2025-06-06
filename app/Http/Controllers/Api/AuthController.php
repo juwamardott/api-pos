@@ -28,8 +28,23 @@ class AuthController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+
+        $token = $user->createToken($request->device_name)->plainTextToken;
     
-        return $user->createToken($request->device_name)->plainTextToken;
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Login successful',
+                'data' => [
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        // tambahkan field lain yang kamu butuhkan di frontend
+                    ],
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]
+                ], 200);
      }
     
 }

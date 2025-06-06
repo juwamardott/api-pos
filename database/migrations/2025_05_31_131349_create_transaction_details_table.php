@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('product_id');
-
+            
+            $table->decimal('price', 15, 2);
             $table->integer('quantity');
-            $table->integer('sub_total');
+            $table->decimal('sub_total', 15, 2);
 
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('transaction_id')->references('id')->on('transactions');

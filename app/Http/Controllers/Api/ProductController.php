@@ -26,8 +26,14 @@ class ProductController extends Controller
     {
         $product = $this->productService->getAll();
 
+        if($product->isEmpty()){
+            return response()->json([
+            'message' => 'Data products not found',
+            ], 404);
+        }
+
         return response()->json([
-           'message' => 'successful get data product',
+           'message' => 'Successful get data product',
            'data' => $product
         ], 200);
         
@@ -97,18 +103,18 @@ class ProductController extends Controller
             $product = $this->productService->getById($id);
 
             return response()->json([
-                'message' => 'Berhasil mendapatkan data produk',
+                'message' => 'Succesful get data by id ',
                 'data' => $product
             ], 200);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Produk tidak ditemukan'
+                'message' => 'Produk not found'
             ], 404);
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Terjadi kesalahan',
+                'message' => 'Find Error',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -140,19 +146,19 @@ class ProductController extends Controller
         DB::commit();
 
         return response()->json([
-            'message' => 'Produk berhasil diperbarui',
+            'message' => 'Product success updated',
             'data' => $product
         ], 200);
 
     } catch (ValidationException $e) {
         return response()->json([
-            'message' => 'Validasi gagal',
+            'message' => 'Validation fail',
             'errors' => $e->errors()
         ], 422);
     } catch (\Exception $e) {
         DB::rollBack();
         return response()->json([
-            'message' => 'Terjadi kesalahan saat memperbarui produk',
+            'message' => 'Error',
             'error' => $e->getMessage()
         ], 500);
     }
@@ -165,9 +171,14 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         //
-        $this->productService->delete($id);
+        $result = $this->productService->delete($id);
+        if($result == 0){
+            return response()->json([
+            'message' => 'Product not found'
+        ]);
+        }
         return response()->json([
-            'message' => 'Product berhasil di hapus'
+            'message' => 'Product delete succesful'
         ]);
     }
 }

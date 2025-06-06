@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
                 'category_id' => 2,
                 'is_active' => true,
                 'created_at' => now(),
-                'updated_at' => now(),
+                'updated_at' => now(),   
             ]
             ,
             [
@@ -84,37 +84,46 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        Transaction::create([
-            'date_order' => now(),
-            'created_by' => 1,
-            'updated_by' => 1,
-            'customer_id' => 2
-         ]);
-        Transaction::create([
-            'date_order' => now(),
-            'created_by' => 1,
-            'updated_by' => 1,
-            'customer_id' => 1
-         ]);
-        Transaction::create([
-            'date_order' => now(),
-            'created_by' => 1,
-            'updated_by' => 1,
-            'customer_id' => 3
-         ]);
+        // Transaction::create([
+        //     'date_order' => now(),
+        //     'created_by' => 1,
+        //     'updated_by' => 1,
+        //     'customer_id' => 2,
+        //     'total' => 200000,
+        //     'paid_amount' => 200000,
+        //     'change' => 0
+        //  ]);
+        // Transaction::create([
+        //     'date_order' => now(),
+        //     'created_by' => 1,
+        //     'updated_by' => 1,
+        //     'customer_id' => 1,
+        //     'total' => 150000,
+        //     'paid_amount' => 150000,
+        //     'change' => 0
+        //  ]);
+        // Transaction::create([
+        //     'date_order' => now(),
+        //     'created_by' => 1,
+        //     'updated_by' => 1,
+        //     'customer_id' => 3,
+        //     'total' => 90000,
+        //     'paid_amount' => 90000,
+        //     'change' => 0
+        //  ]);
 
-        for ($i = 0; $i < 10; $i++) {
-            $quantity = rand(1, 5);
-            $productId = rand(1, 3); // anggap ID produk 1-3
-            $price = rand(1000, 10000); // harga acak, jika tidak ambil dari tabel produk
+        // for ($i = 0; $i < 10; $i++) {
+        //     $quantity = rand(1, 5);
+        //     $productId = rand(1, 3); // anggap ID produk 1-3
+        //     $price = rand(1000, 10000); // harga acak, jika tidak ambil dari tabel produk
 
-            DB::table('transaction_details')->insert([
-                'transaction_id'  => rand(1, 3),
-                'product_id'      => $productId,
-                'quantity'        => $quantity,
-                'sub_total'       => $price * $quantity,
-            ]);
-        }
+        //     DB::table('transaction_details')->insert([
+        //         'transaction_id'  => rand(1, 3),
+        //         'product_id'      => $productId,
+        //         'quantity'        => $quantity,
+        //         'sub_total'       => $price * $quantity,
+        //     ]);
+        // }
 
         
     }

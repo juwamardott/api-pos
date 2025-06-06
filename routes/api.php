@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 
-Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
-Route::apiResource('transactions', TransactionController::class)->middleware('auth:sanctum');
+Route::apiResource('products', ProductController::class);
+Route::apiResource('transactions', TransactionController::class);
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);

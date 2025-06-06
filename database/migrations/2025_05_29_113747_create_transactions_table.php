@@ -17,7 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('customer_id')->nullable();
-
+            $table->decimal('total', 12, 2);
+            $table->decimal('paid_amount', 12, 2);
+            $table->decimal('change', 12, 2)->default(0);
             $table->timestamps();
 
             // Relasi ke tabel users

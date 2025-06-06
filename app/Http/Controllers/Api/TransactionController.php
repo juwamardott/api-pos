@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionController extends Controller
 {
@@ -24,10 +26,15 @@ class TransactionController extends Controller
     {
         //
         $data = $this->transactionService->getAll();
+        // return $data;
+        if($data->isEmpty()){
+            return response()->json([
+                'message' => 'Data transaction not found',
+            ], 404);
+        }
 
         return response()->json([
             'message' => 'Get data transaction Successfull',
-            'user' => Auth::user()->name,
             'data' => $data
         ], 200);
         
@@ -38,16 +45,56 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'date_order' => 'required',
+            'customer_id' => 'nullable|exists:customers,id',
+            'paid_amount' => 'required|numeric|min:0',
+            'created_by' => 'nullable|exists:users,id',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+        ]);
+
+        try {
+            $transaction = $this->transactionService->createTransaction($validated);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Transaction created successfully',
+                'data' => $transaction,
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Transaction failed: ' . $e->getMessage(),
+            ], 500);
+        }
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $transaction = $this->transactionService->getById($id);
+        // return $transaction;
+        if (!$transaction) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Transaction not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Transaction retrieved successfully',
+            'data' => $transaction,
+        ]);
     }
+
 
     /**
      * Update the specified resource in storage.

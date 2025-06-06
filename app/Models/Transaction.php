@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+
+    protected $fillable = [
+        'customer_id',
+        'total',
+        'paid_amount',
+        'change',
+        'date_order',
+        'created_by',
+        'updated_by'
+    ];
     //
     public function author(){
         return $this->belongsTo(User::class, 'created_by');
