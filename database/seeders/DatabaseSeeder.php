@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Transaction;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -68,20 +69,53 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
-         $users = User::take(10)->get();
 
-        if ($users->count() < 10) {
-            $this->command->warn('Minimal harus ada 10 user. Jalankan UserSeeder untuk menambahkan user.');
-            return;
-        }
+        Customer::create([
+            'customer_name' => 'Mardood',
+            'address' => 'Banjar Wanasari' 
+        ]);
+        Customer::create([
+            'customer_name' => 'Ari',
+            'address' => 'Banjar Anyar' 
+        ]);
+        Customer::create([
+            'customer_name' => 'Darmadi',
+            'address' => 'Banjar Kelodan' 
+        ]);
 
-        foreach ($users as $index => $user) {
-            Transaction::create([
-                'customer_name' => "Customer " . ($index + 1),
-                'date_order' => Carbon::now()->subDays(rand(0, 30))->format('Y-m-d'),
-                'created_by' => $user->id,
-                'updated_by' => $user->id,
+
+        Transaction::create([
+            'date_order' => now(),
+            'created_by' => 1,
+            'updated_by' => 1,
+            'customer_id' => 2
+         ]);
+        Transaction::create([
+            'date_order' => now(),
+            'created_by' => 1,
+            'updated_by' => 1,
+            'customer_id' => 1
+         ]);
+        Transaction::create([
+            'date_order' => now(),
+            'created_by' => 1,
+            'updated_by' => 1,
+            'customer_id' => 3
+         ]);
+
+        for ($i = 0; $i < 10; $i++) {
+            $quantity = rand(1, 5);
+            $productId = rand(1, 3); // anggap ID produk 1-3
+            $price = rand(1000, 10000); // harga acak, jika tidak ambil dari tabel produk
+
+            DB::table('transaction_details')->insert([
+                'transaction_id'  => rand(1, 3),
+                'product_id'      => $productId,
+                'quantity'        => $quantity,
+                'sub_total'       => $price * $quantity,
             ]);
         }
+
+        
     }
 }
