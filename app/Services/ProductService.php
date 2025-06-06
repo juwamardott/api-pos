@@ -8,16 +8,13 @@ class ProductService
 {
     public function getAll()
     {
-        return Product::with('category','transactionDetails.transactions.customer')->get();
+        return Product::with('category')->get();
     }
-
-
 
     public function getById($id)
         {
             return Product::with('category')->findOrFail($id);
         }
-
     public function create(array $data)
     {
         return Product::create($data);

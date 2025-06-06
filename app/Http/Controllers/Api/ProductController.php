@@ -24,7 +24,6 @@ class ProductController extends Controller
     }
     public function index()
     {
-
         $product = $this->productService->getAll();
 
         return response()->json([

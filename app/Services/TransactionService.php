@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Models\Transaction;
 
-class ProductService
+class TransactionService
 {
     public function getAll()
     {
-        return Transaction::with('author', 'updater')->get();
+        return Transaction::with('customer', 'transactionDetails.products' )->get();
     }
 
     public function getById($id)

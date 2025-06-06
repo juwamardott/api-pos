@@ -2,35 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Transaction;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\TransactionService;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
-class TransactionController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    protected TransactionService $transactionService;
-
-    public function __construct(TransactionService $transactionService)
-    {
-        $this->transactionService = $transactionService;
-    }
-
     public function index()
     {
         //
-        $data = $this->transactionService->getAll();
-
-        return response()->json([
-            'message' => 'Get data transaction Successfull',
-            'user' => Auth::user()->name,
-            'data' => $data
-        ], 200);
-        
     }
 
     /**
