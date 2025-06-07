@@ -2,13 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
-use App\Models\User;
-use App\Models\Transaction;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Customer;
+use App\Models\Role;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Transaction;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,11 +19,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $roles = ['Cashier', 'Warehouse', 'Accounting', 'Superadmin'];
+
+        foreach ($roles as $roleName) {
+            Role::create(['role' => $roleName]);
+        }
+
+        
         User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::create([
+            'name' => 'Password',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password'),
+            'role_id' => 3
         ]);
 
         // Seed category_products terlebih dahulu

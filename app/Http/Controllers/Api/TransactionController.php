@@ -49,7 +49,7 @@ class TransactionController extends Controller
             'date_order' => 'required',
             'customer_id' => 'nullable|exists:customers,id',
             'paid_amount' => 'required|numeric|min:0',
-            'created_by' => 'nullable|exists:users,id',
+            'created_by' => 'nullable',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',

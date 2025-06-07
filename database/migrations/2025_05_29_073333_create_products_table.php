@@ -17,11 +17,6 @@ return new class extends Migration
             $table->string('sku')->unique();
             $table->text('description')->nullable();
 
-            // $table->decimal('cost_price', 12, 2)->default(0);
-            // $table->decimal('margin', 12, 2)->default(0);      
-            // $table->decimal('tax', 12, 2)->default(0);           
-            // $table->decimal('discount', 12, 2)->default(0);
-
             $table->integer('price');
 
             $table->unsignedInteger('stock')->default(0);

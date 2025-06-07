@@ -57,4 +57,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class, 'updated_by');
     }
+
+    public function role(){
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }
