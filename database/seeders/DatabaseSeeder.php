@@ -78,6 +78,18 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
+            ,
+            [
+                'name' => 'Baju Pollo',
+                'sku' => 'SKU-004',
+                'description' => 'Baju Pollo',
+                'price' => 50000,
+                'stock' => 100,
+                'category_id' => 2,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
 
 
