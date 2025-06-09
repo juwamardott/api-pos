@@ -19,3 +19,8 @@ Route::apiResource('users', UserController::class);
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
+
+
+Route::prefix('reports')->group(function(){
+    Route::get('daily-sales',[TransactionController::class, 'daily_sales']);
+});

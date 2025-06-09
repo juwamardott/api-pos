@@ -111,4 +111,13 @@ class TransactionController extends Controller
     {
         //
     }
+
+
+     public function daily_sales(){
+        $data = $this->transactionService->report();
+        return response()->json([
+           'daily' => $data['daily'],
+           'month' => $data['month'] 
+        ]);
+    }
 }

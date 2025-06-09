@@ -66,4 +66,15 @@ class TransactionService
         $product->delete();
         return true;
     }
+
+
+    public function report(){
+        $daily = Transaction::where('status', 1)->sum('total');
+        $month = Transaction::where('status', 0)->sum('total');
+        return [
+            'daily' => $daily,
+            'month' => $month
+        ];
+        
+    }
 }
