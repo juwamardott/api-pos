@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -115,9 +116,15 @@ class TransactionController extends Controller
 
      public function daily_sales(){
         $data = $this->transactionService->report();
+        $total_product = Product::all()->count();
         return response()->json([
-           'daily' => $data['daily'],
-           'month' => $data['month'] 
+            'message' => 'get report',
+            'data' => [
+                'total_sales' => 12000000,
+                'total_order' => 12,
+                'total_product' => $total_product,
+                'low_stock' => 2,
+            ]
         ]);
     }
 }
