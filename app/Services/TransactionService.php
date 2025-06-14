@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Product;
+use App\Models\Customer;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -23,13 +25,33 @@ class TransactionService
         DB::beginTransaction();
 
         try {
+
+            $name = $validated['customer_name'];
+            $no_telepon = $validated['no_telepon'];
+
+            if($name == null){
+                $customer_id = null;
+            }else{
+                $customer = Customer::create([
+                'customer_name' => $name,
+                'no_telepon' => $no_telepon
+            ]);
+
+            $customer_id = $customer->id;
+            }
+
+            
+
+            
+            
             $total = collect($validated['items'])->sum(function ($item) {
                 return $item['quantity'] * $item['price'];
             });
-
+            
+        
             $transaction = Transaction::create([
                 'date_order' => $validated['date_order'],
-                'customer_id' => $validated['customer_id'] ?? null,
+                'customer_id' => $customer_id ?? null,
                 'created_by' => $validated['created_by'] ?? null,
                 'total' => $total,
                 'paid_amount' => $validated['paid_amount'],
@@ -69,11 +91,17 @@ class TransactionService
 
 
     public function report(){
-        $daily = Transaction::where('status', 1)->sum('total');
-        $month = Transaction::where('status', 0)->sum('total');
+        $total_sales = Transaction::where('status', 1)->sum('total');
+        $today_orders = Transaction::where('status', 1)
+        ->whereDate('date_order', now())
+        ->count();
+        $total_product = Product::where('is_active', 1)->count();
+        $low_stock = Product::where('stock', '<=' , 10)->count();
         return [
-            'daily' => $daily,
-            'month' => $month
+            'total_sales' => (float) $total_sales,
+            'today_orders' => $today_orders,
+            'total_product' => $total_product,
+            'low_stock' => $low_stock 
         ];
         
     }

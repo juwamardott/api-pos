@@ -16,6 +16,13 @@ class Transaction extends Model
         'created_by',
         'updated_by'
     ];
+
+
+    protected $casts = [
+    'total' => 'integer',
+    'paid_amount' => 'integer',
+    'change' => 'integer',
+];
     //
     public function author(){
         return $this->belongsTo(User::class, 'created_by');

@@ -3,15 +3,26 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\TransactionDetails;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductService
 {
     public function getAll()
     {
-        return Product::with('category')->get();
-    }
+        // 1️⃣ Ambil ID terbaru per nama produk
+        $ids = Product::select(DB::raw('MAX(id) as id'))
+            ->groupBy('name')
+            ->pluck('id');
 
+        // 2️⃣ Ambil detail produk + relasi category
+        return Product::with('category')
+            ->whereIn('id', $ids)
+            ->orderByDesc('id')
+            ->get();
+    }
+    
     public function getById($id)
         {
             return Product::with('category')->findOrFail($id);
@@ -55,6 +66,28 @@ class ProductService
             $product->delete();
             return 1;
         }
-
     }
+
+   public function getTopProduct()
+{
+    $topProducts = TransactionDetails::select(
+            'product_id',
+            DB::raw('SUM(sub_total) as total')
+        )
+        ->groupBy('product_id')
+        ->orderByDesc('total')
+        ->with('products')
+        ->take(10)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'product_id' => $item->product_id,
+                'total' => (float) $item->total,
+                'product' => $item->products,
+            ];
+        });
+
+    return $topProducts;
+}
+
 }

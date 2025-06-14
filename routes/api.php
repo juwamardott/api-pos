@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryProductController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UserController;
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('products', ProductController::class);
 Route::apiResource('transactions', TransactionController::class);
 Route::apiResource('users', UserController::class);
+Route::apiResource('category-product', CategoryProductController::class);
+
+
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -22,5 +26,6 @@ Route::prefix('auth')->group(function () {
 
 
 Route::prefix('reports')->group(function(){
+    Route::get('top-product', [ProductController::class, 'get_top_product']);
     Route::get('daily-sales',[TransactionController::class, 'daily_sales']);
 });

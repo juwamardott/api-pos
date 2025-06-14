@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionController extends Controller
@@ -44,35 +45,48 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'date_order' => 'required',
-            'customer_id' => 'nullable|exists:customers,id',
-            'paid_amount' => 'required|numeric|min:0',
-            'created_by' => 'nullable',
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0',
-        ]);
+   public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'date_order' => 'required',
+        'customer_id' => 'nullable',
+        'customer_name' => 'nullable',
+        'no_telepon' => 'nullable',
+        'paid_amount' => 'required',
+        'created_by' => 'nullable',
+        'items' => 'required|array|min:1',
+        'items.*.product_id' => 'required|exists:products,id',
+        'items.*.quantity' => 'required|integer|min:1',
+        'items.*.price' => 'required|numeric|min:0',
+    ]);
 
-        try {
-            $transaction = $this->transactionService->createTransaction($validated);
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Transaction created successfully',
-                'data' => $transaction,
-            ], 201);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Transaction failed: ' . $e->getMessage(),
-            ], 500);
-        }
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'errors' => $validator->errors(),
+        ], 422);
     }
+
+    $validated = $validator->validated();
+
+    try {
+        $transaction = $this->transactionService->createTransaction($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Transaction created successfully',
+            'data' => $transaction,
+        ], 201);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Transaction failed: ' . $e->getMessage(),
+        ], 500);
+    }
+}
+
 
 
     /**
@@ -116,15 +130,9 @@ class TransactionController extends Controller
 
      public function daily_sales(){
         $data = $this->transactionService->report();
-        $total_product = Product::all()->count();
         return response()->json([
             'message' => 'get report',
-            'data' => [
-                'total_sales' => 12000000,
-                'total_order' => 12,
-                'total_product' => $total_product,
-                'low_stock' => 2,
-            ]
+            'data' => $data
         ]);
     }
 }

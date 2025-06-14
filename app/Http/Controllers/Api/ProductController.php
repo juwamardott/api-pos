@@ -181,4 +181,14 @@ class ProductController extends Controller
             'message' => 'Product delete succesful'
         ]);
     }
+
+
+    public function get_top_product(){
+        $top = $this->productService->getTopProduct();
+
+        return response()->json([
+           'message' => 'Succes get data top product',
+           'data' => $top  
+        ]);
+    }
 }
