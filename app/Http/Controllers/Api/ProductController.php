@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -50,7 +51,7 @@ class ProductController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
                 'sku' => 'required|string',
-                'description' => 'nullable|string',
+                'description' => 'nullable',
                 'price' => 'required|numeric',
                 'stock' => 'required|numeric',
                 'category_id' => 'nullable|integer',
@@ -124,46 +125,54 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        //
-         // Validasi input
-    $validated = $request->validate([
-        'name' => 'required|string',
-        'sku' => 'required|string',
-        'description' => 'nullable|string',
+{
+    // Gunakan Validator manual
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'sku' => 'required|max:100',
+        'description' => 'nullable',
         'price' => 'required|numeric',
-        'stock' => 'required|numeric',
-        'category_id' => 'nullable|integer',
-        'is_active' => 'nullable|boolean',
+        'stock' => 'required|integer',
+        'category_id' => 'required',
+        'is_active' => 'nullable',
     ]);
 
-    try {
-        DB::beginTransaction();
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation failed',
+            'errors' => $validator->errors(),
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 
-        // Update produk
-        $product = $this->productService->update($id, $validated);
+    DB::beginTransaction();
+
+    try {
+        // Pastikan produk ada
+        $product = $this->productService->getById($id);
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Jalankan update di service
+        $updatedProduct = $this->productService->update($id, $validator->validated());
 
         DB::commit();
 
         return response()->json([
-            'message' => 'Product success updated',
-            'data' => $product
-        ], 200);
+            'message' => 'Product updated successfully',
+            'data' => $updatedProduct
+        ], Response::HTTP_OK);
 
-    } catch (ValidationException $e) {
-        return response()->json([
-            'message' => 'Validation fail',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         DB::rollBack();
         return response()->json([
-            'message' => 'Error',
-            'error' => $e->getMessage()
-        ], 500);
+            'message' => 'Internal server error',
+            'error' => $e->getMessage(),
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
-
-    }
+}
 
     /**
      * Remove the specified resource from storage.
