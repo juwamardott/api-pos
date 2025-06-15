@@ -90,7 +90,8 @@ class TransactionService
     }
 
 
-    public function report(){
+    public function report()
+    {
         $total_sales = Transaction::where('status', 1)->sum('total');
         $today_orders = Transaction::where('status', 1)
         ->whereDate('date_order', now())
@@ -103,6 +104,5 @@ class TransactionService
             'total_product' => $total_product,
             'low_stock' => $low_stock 
         ];
-        
     }
 }
