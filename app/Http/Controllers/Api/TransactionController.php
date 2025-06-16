@@ -129,9 +129,18 @@ class TransactionController extends Controller
 
 
      public function daily_sales(){
-        $data = $this->transactionService->report();
+        $data = $this->transactionService->generateDailySales();
         return response()->json([
             'message' => 'get report',
+            'data' => $data
+        ]);
+    }
+
+
+    public function sales_per_category(){
+        $data = $this->transactionService->generateSalesPerCategory();
+        return response()->json([
+            'message' => 'succes',
             'data' => $data
         ]);
     }

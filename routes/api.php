@@ -28,4 +28,5 @@ Route::prefix('auth')->group(function () {
 Route::prefix('reports')->group(function(){
     Route::get('top-product', [ProductController::class, 'get_top_product']);
     Route::get('daily-sales',[TransactionController::class, 'daily_sales']);
+    Route::get('sales_per_category', [TransactionController::class, 'sales_per_category']);
 });
