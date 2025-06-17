@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryProductController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ Route::prefix('auth')->group(function () {
 
 
 Route::prefix('reports')->group(function(){
-    Route::get('top-product', [ProductController::class, 'get_top_product']);
-    Route::get('daily-sales',[TransactionController::class, 'daily_sales']);
-    Route::get('sales_per_category', [TransactionController::class, 'sales_per_category']);
+    Route::get('top-product', [ReportController::class, 'get_top_product']);
+    Route::get('daily-sales',[ReportController::class, 'daily_sales']);
+    Route::get('sales_per_category', [ReportController::class, 'sales_per_category']);
 });
