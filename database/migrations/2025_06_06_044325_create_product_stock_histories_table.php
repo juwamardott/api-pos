@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('type');
             $table->integer('quantity');
-            $table->string('text');
+            $table->string('notes');
             $table->timestamps();
         });
     }

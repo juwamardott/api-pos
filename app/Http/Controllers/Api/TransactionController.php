@@ -55,7 +55,7 @@ class TransactionController extends Controller
         'paid_amount' => 'required',
         'created_by' => 'nullable',
         'items' => 'required|array|min:1',
-        'items.*.product_id' => 'required|exists:products,id',
+        'items.*.product_id' => 'required',
         'items.*.quantity' => 'required|integer|min:1',
         'items.*.price' => 'required|numeric|min:0',
     ]);
@@ -70,21 +70,11 @@ class TransactionController extends Controller
 
     $validated = $validator->validated();
 
-    try {
-        $transaction = $this->transactionService->createTransaction($validated);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Transaction created successfully',
-            'data' => $transaction,
-        ], 201);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Transaction failed: ' . $e->getMessage(),
-        ], 500);
-    }
+    $this->transactionService->createTransaction($validated);
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Transaction created successfully',
+    ], 201);
 }
 
 
