@@ -32,4 +32,9 @@ class Product extends Model{
      public function productStockHistories(){
           return $this->hasMany(ProductStockHistories::class, 'product_id');
      }
+
+
+     public function stock(){
+          return $this->hasMany(Stock::class, 'product_id');
+     }
 }

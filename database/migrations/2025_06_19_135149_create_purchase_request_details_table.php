@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_stock_histories', function (Blueprint $table) {
+        Schema::create('purchase_request_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('purchase_id');
             $table->unsignedBigInteger('product_id');
-            $table->date('date');
-            $table->string('type');
             $table->integer('quantity');
-            $table->string('reference');
-            $table->integer('balance');
-            $table->string('description');  
+            $table->decimal('price', 12, 2);
+            $table->decimal('sub_total', 12, 2);
             $table->timestamps();
+
+            $table->foreign('purchase_id')->references('id')->on('purchase_requests');
+            $table->foreign('product_id')->references('id')->on('purchase_request_details');
+            
         });
     }
 
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_stock_histories');
+        Schema::dropIfExists('purchase_request_details');
     }
 };

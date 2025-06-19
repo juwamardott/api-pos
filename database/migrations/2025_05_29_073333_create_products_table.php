@@ -18,8 +18,6 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             $table->integer('price');
-
-            $table->unsignedInteger('stock')->default(0);
             $table->unsignedBigInteger('category_id')->nullable();
             
             $table->foreign('category_id')->references('id')->on('category_products');
