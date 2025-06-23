@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\Stock;
 use App\Models\TransactionDetails;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,7 +18,7 @@ class ProductService
             ->pluck('id');
 
         // 2️⃣ Ambil detail produk + relasi category
-        return Product::with('category')
+        return Product::with('category', 'stock')
             ->whereIn('id', $ids)
             ->orderByDesc('id')
             ->get();
@@ -25,14 +26,21 @@ class ProductService
     
     public function getById($id)
         {
-            return Product::with('category')->findOrFail($id);
+            return Product::with('category', 'stock')->findOrFail($id);
         }
-    public function create(array $data)
+    public function create(array $data, $stock)
     {
-        return Product::create($data);
+        $product = Product::create($data);
+        $id  = $product->id;
+        Stock::create([
+           'product_id' => $id,
+           'quantity' => $stock,
+           'buy_price' => $data['price']
+        ]);
+        return  $product;
     }
 
-    public function update($id, array $data)
+    public function update($id, array $data, $stock)
     {
         // Cari produk, kalau tidak ada otomatis akan throw ModelNotFoundException
         $product = Product::findOrFail($id);
@@ -47,6 +55,12 @@ class ProductService
                 abort(409, 'SKU sudah digunakan oleh produk lain.');
             }
         }
+
+
+        $oldStock = Stock::where('product_id', $id)->first();
+        
+        $oldStock->quantity = $stock;
+        $oldStock->save();
 
         // Update produk
         $product->update($data);

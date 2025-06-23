@@ -70,10 +70,19 @@ class TransactionController extends Controller
 
     $validated = $validator->validated();
 
-    $this->transactionService->createTransaction($validated);
+    $transaction = $this->transactionService->createTransaction($validated);
+
+    if (!$transaction) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to create transaction'
+        ], 500);
+    }
+
     return response()->json([
         'status' => 'success',
         'message' => 'Transaction created successfully',
+        'data' => $transaction  // opsional, kalau mau kirim data balik
     ], 201);
 }
 

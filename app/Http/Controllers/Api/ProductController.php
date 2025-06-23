@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Stock;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +54,6 @@ class ProductController extends Controller
                 'sku' => 'required|string',
                 'description' => 'nullable',
                 'price' => 'required|numeric',
-                'stock' => 'required|numeric',
                 'category_id' => 'nullable|integer',
                 'is_active' => 'nullable|boolean',
             ]);
@@ -69,7 +69,7 @@ class ProductController extends Controller
                     'message' => 'Produk dengan SKU tersebut sudah ada.'
                 ], 409);
             }
-            $product = $this->productService->create($validated);
+            $product = $this->productService->create($validated, $request->stock);
 
             DB::commit();
 
@@ -102,6 +102,7 @@ class ProductController extends Controller
     {
         try {
             $product = $this->productService->getById($id);
+            
 
             return response()->json([
                 'message' => 'Succesful get data by id ',
@@ -132,10 +133,12 @@ class ProductController extends Controller
         'sku' => 'required|max:100',
         'description' => 'nullable',
         'price' => 'required|numeric',
-        'stock' => 'required|integer',
         'category_id' => 'required',
         'is_active' => 'nullable',
     ]);
+
+
+    
 
     if ($validator->fails()) {
         return response()->json([
@@ -156,7 +159,7 @@ class ProductController extends Controller
         }
 
         // Jalankan update di service
-        $updatedProduct = $this->productService->update($id, $validator->validated());
+        $updatedProduct = $this->productService->update($id, $validator->validated(), $request->stock);
 
         DB::commit();
 

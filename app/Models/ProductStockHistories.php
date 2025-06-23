@@ -11,7 +11,10 @@ class ProductStockHistories extends Model
         'date',
         'qty',
         'quantity',
-        'type'
+        'type',
+        'reference',
+        'balance',
+        'description'
     ];
 
 
