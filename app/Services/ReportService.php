@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\CategoryProduct;
+use App\Models\Stock;
 use App\Models\TransactionDetails;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,7 +20,7 @@ class ReportService
         ->whereDate('date_order', now())
         ->count();
         $total_product = Product::where('is_active', 1)->count();
-        $low_stock = Product::where('stock', '<=' , 10)->count();
+        $low_stock = Stock::where('quantity', '<=' , 10)->count();
         return [
             'total_sales' => (float) $total_sales,
             'today_orders' => $today_orders,
@@ -28,30 +29,6 @@ class ReportService
         ];
     }
 
-
-//     public function generateSalesPerCategory()
-//     {
-//         $categories = CategoryProduct::with(['products.transactionDetails'])->get();
-//         $result = [];
-
-//         foreach ($categories as $category) {
-//             $totalSales = 0;
-
-//             foreach ($category->products as $product) {
-//                 foreach ($product->transactionDetails as $detail) {
-//                     $totalSales += $detail->sub_total;
-//                 }
-//             }
-
-//             $result[] = [
-//                 'category_id' => $category->id,
-//                 'category_name' => $category->category_name,
-//                 'total_sales' => $totalSales,
-//             ];
-//         }
-
-//         return $result;
-//     }
 
      public function generateSalesPerCategory()
      {
