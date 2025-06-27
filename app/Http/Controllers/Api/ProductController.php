@@ -26,7 +26,7 @@ class ProductController extends Controller
     }
     public function index()
     {
-        $product = $this->productService->getAll();
+        $product = $this->productService->getAllPagination();
 
         if($product->isEmpty()){
             return response()->json([
@@ -39,6 +39,16 @@ class ProductController extends Controller
            'data' => $product
         ], 200);
         
+    }
+
+
+    public function allDataProduct(){
+        $product = Product::with('category', 'stock')->get();
+
+        return response()->json([
+           'message' => 'Successful get data product',
+           'data' => $product
+        ], 200);
     }
 
     /**

@@ -21,7 +21,7 @@ class AuthController extends Controller
             'device_name' => 'required',
         ]);
     
-        $user = User::where('email', $request->email)->first();
+        $user = User::with('role')->where('email', $request->email)->first();
     
        if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -32,6 +32,7 @@ class AuthController extends Controller
 
 
         $token = $user->createToken($request->device_name)->plainTextToken;
+        
     
             return response()->json([
                 'status' => 'success',
@@ -41,7 +42,8 @@ class AuthController extends Controller
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
-                        // tambahkan field lain yang kamu butuhkan di frontend
+                        'role_id' => $user->role,
+                        'role' => $user->role->role
                     ],
                     'access_token' => $token,
                     'token_type' => 'Bearer',

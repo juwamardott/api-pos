@@ -20,6 +20,11 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('category-product', CategoryProductController::class);
 
 
+Route::prefix('transaction')->group(function(){
+    Route::get('products', [ProductController::class, 'allDataProduct']);
+});
+
+
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);

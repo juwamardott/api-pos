@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductService
 {
-    public function getAll()
+    public function getAllPagination()
     {
         // 1️⃣ Ambil ID terbaru per nama produk
         $ids = Product::select(DB::raw('MAX(id) as id'))
@@ -21,7 +21,7 @@ class ProductService
         return Product::with('category', 'stock')
             ->whereIn('id', $ids)
             ->orderByDesc('id')
-            ->get();
+            ->paginate(8);
     }
     
     public function getById($id)

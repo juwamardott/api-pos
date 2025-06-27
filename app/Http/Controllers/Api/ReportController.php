@@ -60,7 +60,7 @@ class ReportController extends Controller
      public function daily_sales(){
         $data = $this->reportService->generateDailySales();
         return response()->json([
-            'message' => 'get report',
+            'message' => 'get report successful',
             'data' => $data
         ]);
     }

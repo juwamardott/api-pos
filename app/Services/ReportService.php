@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\CategoryProduct;
-use App\Models\Stock;
 use App\Models\TransactionDetails;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -15,12 +16,18 @@ class ReportService
 
      public function generateDailySales()
     {
-        $total_sales = Transaction::where('status', 1)->sum('total');
-        $today_orders = Transaction::where('status', 1)
-        ->whereDate('date_order', now())
-        ->count();
+        $total_sales = Transaction::where('status', 1)->whereDate('date_order', Carbon::today()->toDateString())->sum('total');
+     //    $date_order = Transaction::first();
+          $today_orders = Transaction::where('status', 1)
+          ->whereDate('date_order', Carbon::today()->toDateString())
+          ->count();
+
+          // return Carbon::today()->toDateString();
+          // return $date_order->date_order;
+
         $total_product = Product::where('is_active', 1)->count();
         $low_stock = Stock::where('quantity', '<=' , 10)->count();
+        
         return [
             'total_sales' => (float) $total_sales,
             'today_orders' => $today_orders,
