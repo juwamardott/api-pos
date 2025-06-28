@@ -14,25 +14,26 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 
-Route::apiResource('products', ProductController::class);
-Route::apiResource('transactions', TransactionController::class);
-Route::apiResource('users', UserController::class);
+Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
+Route::apiResource('transactions', TransactionController::class)->middleware('auth:sanctum');
+Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 Route::apiResource('category-product', CategoryProductController::class);
 
 
 Route::prefix('transaction')->group(function(){
-    Route::get('products', [ProductController::class, 'allDataProduct']);
+    Route::get('products', [ProductController::class, 'allDataProduct'])->middleware('auth:sanctum');
 });
 
 
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
 
 Route::prefix('reports')->group(function(){
-    Route::get('top-product', [ReportController::class, 'get_top_product']);
-    Route::get('daily-sales',[ReportController::class, 'daily_sales']);
-    Route::get('sales_per_category', [ReportController::class, 'sales_per_category']);
+    Route::get('top-product', [ReportController::class, 'get_top_product'])->middleware('auth:sanctum');
+    Route::get('daily-sales',[ReportController::class, 'daily_sales'])->middleware('auth:sanctum');
+    Route::get('sales_per_category', [ReportController::class, 'sales_per_category'])->middleware('auth:sanctum');
 });
