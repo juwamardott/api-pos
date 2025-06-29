@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::apiResource('transactions', TransactionController::class)->middleware('auth:sanctum');
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
-Route::apiResource('category-product', CategoryProductController::class);
+Route::apiResource('category-product', CategoryProductController::class)->middleware('auth:sanctum');
 
 
 Route::prefix('transaction')->group(function(){

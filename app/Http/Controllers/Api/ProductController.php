@@ -24,22 +24,25 @@ class ProductController extends Controller
     {
         $this->productService = $productService;
     }
-    public function index()
+    
+    public function index(Request $request)
     {
-        $product = $this->productService->getAllPagination();
+        $search = $request->query('search'); // Ambil ?search=
 
-        if($product->isEmpty()){
+        $product = $this->productService->getAllPagination($search);
+
+        if ($product->isEmpty()) {
             return response()->json([
-            'message' => 'Data products not found',
+                'message' => 'Data products not found',
             ], 404);
         }
 
         return response()->json([
-           'message' => 'Successful get data product',
-           'data' => $product
+            'message' => 'Successful get data product',
+            'data' => $product,
         ], 200);
-        
     }
+
 
 
     public function allDataProduct(){

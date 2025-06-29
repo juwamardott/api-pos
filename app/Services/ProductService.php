@@ -10,12 +10,16 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductService
 {
-    public function getAllPagination()
+    public function getAllPagination($search = null)
     {
         // 1️⃣ Ambil ID terbaru per nama produk
-        $ids = Product::select(DB::raw('MAX(id) as id'))
-            ->groupBy('name')
-            ->pluck('id');
+        $idsQuery = Product::select(DB::raw('MAX(id) as id'))
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->groupBy('name');
+
+        $ids = $idsQuery->pluck('id');
 
         // 2️⃣ Ambil detail produk + relasi category
         return Product::with('category', 'stock')
@@ -23,6 +27,7 @@ class ProductService
             ->orderByDesc('id')
             ->paginate(8);
     }
+
     
     public function getById($id)
         {

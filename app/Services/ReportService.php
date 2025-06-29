@@ -81,7 +81,7 @@ class ReportService
           })
           ->groupBy('product_id')
           ->orderByDesc('total')
-          ->with('products')
+          ->with('products.stock')
           ->take(10)
           ->get()
           ->map(function ($item) {
