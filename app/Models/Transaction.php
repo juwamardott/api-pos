@@ -14,7 +14,8 @@ class Transaction extends Model
         'change',
         'date_order',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'branch_id'
     ];
 
 

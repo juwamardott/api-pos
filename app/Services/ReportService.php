@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ReportService
 {
 
-     public function generateDailySales()
+     public function generateDailySales($branch_id)
     {
-        $total_sales = Transaction::where('status', 1)->whereDate('date_order', Carbon::today()->toDateString())->sum('total');
+        $total_sales = Transaction::where('status', 1)->where('branch_id', $branch_id)->whereDate('date_order', Carbon::today()->toDateString())->sum('total');
      //    $date_order = Transaction::first();
           $today_orders = Transaction::where('status', 1)
           ->whereDate('date_order', Carbon::today()->toDateString())
@@ -68,16 +68,29 @@ class ReportService
      return $result;
      }
 
+     public function getRecentOrders($branch_id)
+     {
+          $recentOrders = Transaction::with(['transactionDetails.products'])
+               ->where('branch_id', $branch_id)
+               ->where('status', 1)
+               ->orderBy('created_at', 'desc')
+               ->take(10)
+               ->get();
+
+          return $recentOrders;
+     }
 
 
-      public function getTopProduct()
+
+
+      public function getTopProduct($branch_id)
      {
      $topProducts = TransactionDetails::select(
                'product_id',
                DB::raw('SUM(sub_total) as total')
           )
-          ->whereHas('transactions', function ($q) {
-               $q->where('status', 1);
+          ->whereHas('transactions', function ($q) use ($branch_id) {
+               $q->where('status', 1)->where('branch_id', $branch_id);
           })
           ->groupBy('product_id')
           ->orderByDesc('total')

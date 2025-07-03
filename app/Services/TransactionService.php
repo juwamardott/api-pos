@@ -51,6 +51,7 @@ class TransactionService
             'total'       => $total,
             'paid_amount' => $validated['paid_amount'],
             'change'      => $validated['paid_amount'] - $total,
+            'branch_id' => $validated['branch_id']
         ]);
 
         // 4️⃣ Loop item: Buat detail + potong stock + siapkan stock histories

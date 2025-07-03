@@ -22,20 +22,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['Cashier', 'Warehouse', 'Accounting', 'Superadmin'];
+        $roles = ['Cashier', 'Warehouse', 'Accounting', 'Superadmin Cashier', 'Superadmin Warehouse', 'Superadmin Accounting'];
 
         foreach ($roles as $roleName) {
             Role::create(['role' => $roleName]);
         }
 
+        DB::table('branches')->insert([
+            [
+                'name' => 'Outlet A',
+                'address' => 'Jl. Merdeka No. 123, Jakarta',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Outlet B',
+                'address' => 'Jl. Sudirman No. 45, Bandung',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Gudang Pusat',
+                'address' => 'Kawasan Industri No. 8, Bekasi',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+
         
         User::factory(10)->create();
 
         User::create([
-            'name' => 'Password',
+            'name' => 'Mardood',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
-            'role_id' => 3
+            'role_id' => 4,
+            'branch_id' => 1,
+
         ]);
 
 
@@ -59,11 +83,11 @@ class DatabaseSeeder extends Seeder
 
         for ($i = 0; $i < 50; $i++) {
             Product::create([
-                'name' => $faker->words(2, true), // contoh: "Pena Biru"
+                'name' => $faker->words(2, true),
                 'sku' => 'SKU' . $faker->unique()->numerify('####'),
                 'description' => $faker->sentence(),
                 'price' => $faker->numberBetween(1000, 100000),
-                'category_id' => $faker->numberBetween(1, 5), // pastikan category_products ada id 1–5
+                'category_id' => $faker->numberBetween(1, 5),
                 'is_active' => true,
             ]);
         }
@@ -74,8 +98,9 @@ class DatabaseSeeder extends Seeder
         foreach ($products as $product) {
             Stock::create([
                 'product_id' => $product->id,
-                'quantity' => $faker->numberBetween(10, 100), // jumlah stok per produk
-                'buy_price' => $faker->numberBetween(500, $product->price), // harga beli lebih murah dari harga jual
+                'quantity' => $faker->numberBetween(10, 100),
+                'buy_price' => $faker->numberBetween(500, $product->price),
+                'branch_id' =>$faker->numberBetween(1,3),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

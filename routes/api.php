@@ -33,7 +33,8 @@ Route::prefix('auth')->group(function () {
 
 
 Route::prefix('reports')->group(function(){
-    Route::get('top-product', [ReportController::class, 'get_top_product'])->middleware('auth:sanctum');
-    Route::get('daily-sales',[ReportController::class, 'daily_sales'])->middleware('auth:sanctum');
+    Route::post('top-product', [ReportController::class, 'get_top_product'])->middleware('auth:sanctum');
+    Route::post('daily-sales',[ReportController::class, 'daily_sales'])->middleware('auth:sanctum');
+    Route::post('recent-orders',[ReportController::class, 'recent_orders'])->middleware('auth:sanctum');
     Route::get('sales_per_category', [ReportController::class, 'sales_per_category'])->middleware('auth:sanctum');
 });

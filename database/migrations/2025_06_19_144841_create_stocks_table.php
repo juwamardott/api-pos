@@ -16,9 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
             $table->integer('buy_price');
+            $table->unsignedBigInteger('branch_id');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('branch_id')->references('id')->on('branches');
         });
     }
 

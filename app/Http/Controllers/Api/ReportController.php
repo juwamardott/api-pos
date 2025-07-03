@@ -57,8 +57,19 @@ class ReportController extends Controller
     }
 
 
-     public function daily_sales(){
-        $data = $this->reportService->generateDailySales();
+    public function recent_orders(Request $request){
+        $branch_id = $request->branch_id;
+        $data = $this->reportService->getRecentOrders($branch_id);
+        return response()->json([
+            'message' => 'get recent order successful',
+            'data' => $data
+        ]);
+    }
+
+
+     public function daily_sales(Request $request){
+        $branch_id = $request->branch_id;
+        $data = $this->reportService->generateDailySales($branch_id);
         return response()->json([
             'message' => 'get report successful',
             'data' => $data
@@ -74,8 +85,10 @@ class ReportController extends Controller
         ]);
     }
 
-    public function get_top_product(){
-        $top = $this->reportService->getTopProduct();
+    public function get_top_product(Request $request){
+        
+        $branch_id = $request->branch_id;
+        $top = $this->reportService->getTopProduct($branch_id);
 
         return response()->json([
            'message' => 'Succes get data top product',

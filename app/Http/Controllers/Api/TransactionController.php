@@ -28,13 +28,6 @@ class TransactionController extends Controller
     {
         //
         $data = $this->transactionService->getAll();
-        // return $data;
-        if($data->isEmpty()){
-            return response()->json([
-                'message' => 'Data transaction not found',
-            ], 404);
-        }
-
         return response()->json([
             'message' => 'Get data transaction Successfull',
             'data' => $data
@@ -54,6 +47,7 @@ class TransactionController extends Controller
         'no_telepon' => 'nullable',
         'paid_amount' => 'required',
         'created_by' => 'nullable',
+        'branch_id' => 'required',
         'items' => 'required|array|min:1',
         'items.*.product_id' => 'required',
         'items.*.quantity' => 'required|integer|min:1',
@@ -82,7 +76,7 @@ class TransactionController extends Controller
     return response()->json([
         'status' => 'success',
         'message' => 'Transaction created successfully',
-        'data' => $transaction  // opsional, kalau mau kirim data balik
+        'data' => $transaction
     ], 201);
 }
 

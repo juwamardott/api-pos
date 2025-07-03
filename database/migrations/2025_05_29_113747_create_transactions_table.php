@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('branch_id');
             $table->decimal('total', 12, 2);
             $table->decimal('paid_amount', 12, 2);
             $table->decimal('change', 12, 2)->default(0);
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('branch_id')->references('id')->on('branches');
         });
     }
 
