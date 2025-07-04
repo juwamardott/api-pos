@@ -69,6 +69,7 @@ class ProductController extends Controller
                 'price' => 'required|numeric',
                 'category_id' => 'nullable|integer',
                 'is_active' => 'nullable|boolean',
+                'branch_id' => 'required'
             ]);
 
             if ($validator->fails()) {

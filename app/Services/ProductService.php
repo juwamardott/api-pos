@@ -40,7 +40,8 @@ class ProductService
         Stock::create([
            'product_id' => $id,
            'quantity' => $stock,
-           'buy_price' => $data['price']
+           'buy_price' => $data['price'],
+           'branch_id' => $data['branch_id']
         ]);
         return  $product;
     }
