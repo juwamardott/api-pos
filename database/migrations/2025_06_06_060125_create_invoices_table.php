@@ -11,11 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('role');
-            $table->string('level');
+            $table->string('no_invoice');
+            $table->unsignedBigInteger('receive_id');
+            $table->date('date');
+            $table->string('document');
+            $table->decimal('total_amout', 12, 2);
             $table->timestamps();
+
+            $table->foreign('receive_id')->references('id')->on('roles');
         });
     }
 
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('invoices');
     }
 };

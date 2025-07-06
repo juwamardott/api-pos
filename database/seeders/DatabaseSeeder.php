@@ -22,11 +22,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['Cashier', 'Warehouse', 'Accounting', 'Superadmin Cashier', 'Superadmin Warehouse', 'Superadmin Accounting'];
+            $roles = ['Cashier', 'Warehouse', 'Accounting'];
 
-        foreach ($roles as $roleName) {
-            Role::create(['role' => $roleName]);
-        }
+                foreach ($roles as $roleName) {
+                    Role::create([
+                        'role' => $roleName,
+                        'level' => 'regular'
+                    ]);
+
+                    Role::create([
+                        'role' => $roleName,
+                        'level' => 'superadmin'
+                    ]);
+                }
+
+                // Tambahan: Global Admin (opsional)
+                Role::create([
+                    'role' => 'Admin',
+                    'level' => 'global'
+                ]);
 
         DB::table('branches')->insert([
             [

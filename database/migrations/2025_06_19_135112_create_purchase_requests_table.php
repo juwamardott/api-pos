@@ -13,12 +13,17 @@ return new class extends Migration
     {
         Schema::create('purchase_requests', function (Blueprint $table) {
             $table->id();
+            $table->string('no_po');
             $table->date('date_purchase');
-            $table->string('supplier_name');
-            $table->string('invoice');
-            $table->decimal('total_amout', 12, 2);
+            $table->date('due_date');
+            $table->unsignedBigInteger('supplier_id');
+            $table->unsignedBigInteger('invoice_id');
+            
             $table->integer('status');
             $table->timestamps();
+
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->foreign('invoice_id')->references('id')->on('invoices');
         });
     }
 
