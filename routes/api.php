@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\NewNotification;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryProductController;
 use App\Http\Controllers\Api\ProductController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -37,4 +39,10 @@ Route::prefix('reports')->group(function(){
     Route::post('daily-sales',[ReportController::class, 'daily_sales'])->middleware('auth:sanctum');
     Route::post('recent-orders',[ReportController::class, 'recent_orders'])->middleware('auth:sanctum');
     Route::get('sales_per_category', [ReportController::class, 'sales_per_category'])->middleware('auth:sanctum');
+});
+
+
+Route::get('/test-broadcast', function () {
+    broadcast(new NewNotification('🚀 Notifikasi dari backend!'));
+    return response()->json(['status' => 'sent']);
 });
